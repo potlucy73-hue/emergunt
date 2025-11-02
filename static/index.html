@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FMCSA Carrier Data Extraction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚛 FMCSA Carrier Data Extraction</h1>
+            <p class="subtitle">Extract truck carrier data from FMCSA database</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('github')">GitHub Repository</button>
+            <button class="tab-btn" onclick="showTab('upload')">Upload CSV</button>
+            <button class="tab-btn" onclick="showTab('status')">Job Status</button>
+            <button class="tab-btn" onclick="showTab('history')">History</button>
+        </div>
+
+        <!-- GitHub Repository Tab -->
+        <div id="github-tab" class="tab-content active">
+            <div class="card">
+                <h2>Extract from GitHub Repository</h2>
+                <form id="github-form">
+                    <div class="form-group">
+                        <label for="repo">GitHub Repository (owner/repo):</label>
+                        <input type="text" id="repo" name="repo" placeholder="username/repo-name" required>
+                        <small>Example: myusername/fmcsa-data</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="file-path">MC List File Path:</label>
+                        <input type="text" id="file-path" name="file_path" value="mc_list.txt" placeholder="mc_list.txt">
+                    </div>
+                    <div class="form-group">
+                        <label for="branch">Branch:</label>
+                        <input type="text" id="branch" name="branch" value="main" placeholder="main">
+                    </div>
+                    <button type="button" onclick="checkRepo()" class="btn btn-secondary">Check Repository</button>
+                    <button type="submit" class="btn btn-primary">Start Extraction</button>
+                </form>
+                <div id="repo-status" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- Upload CSV Tab -->
+        <div id="upload-tab" class="tab-content">
+            <div class="card">
+                <h2>Upload CSV File</h2>
+                <form id="upload-form">
+                    <div class="form-group">
+                        <label for="csv-file">Select CSV File:</label>
+                        <input type="file" id="csv-file" name="file" accept=".csv,.txt" required>
+                        <small>Upload a CSV file containing MC numbers</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload & Start Extraction</button>
+                </form>
+                <div id="upload-status" class="status-message"></div>
+            </div>
+        </div>
+
+        <!-- Job Status Tab -->
+        <div id="status-tab" class="tab-content">
+            <div class="card">
+                <h2>Check Job Status</h2>
+                <form id="status-form">
+                    <div class="form-group">
+                        <label for="job-id">Job ID:</label>
+                        <input type="text" id="job-id" name="job_id" placeholder="job_20241202_123456" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Check Status</button>
+                    <button type="button" onclick="autoRefresh()" class="btn btn-secondary" id="auto-refresh-btn">Auto Refresh</button>
+                </form>
+                <div id="job-status" class="status-display"></div>
+                <div id="job-actions" class="job-actions" style="display: none;">
+                    <button onclick="downloadResults('csv')" class="btn btn-success">Download CSV</button>
+                    <button onclick="downloadResults('json')" class="btn btn-success">Download JSON</button>
+                    <button onclick="downloadFailed()" class="btn btn-warning">Download Failed</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="history-tab" class="tab-content">
+            <div class="card">
+                <h2>Extraction History</h2>
+                <button onclick="loadHistory()" class="btn btn-secondary">Refresh History</button>
+                <div id="history-list" class="history-list"></div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
+
