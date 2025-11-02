@@ -1,0 +1,150 @@
+name: FMCSA Data Extraction
+
+on:
+  workflow_dispatch:  # Manual trigger from Actions tab
+  push:
+    paths:
+      - 'mc_list.txt'  # Trigger when MC list is updated
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *'  # Daily at midnight UTC (optional)
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
+          libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
+          libxrandr2 libgbm1 libasound2 libpango-1.0-0 libharfbuzz0b libatk1.0-0 \
+          libcairo2 libpangoft2-1.0-0
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install fastapi uvicorn playwright aiosqlite httpx python-dotenv pandas \
+          PyJWT bcrypt pydantic[email] email-validator
+    
+    - name: Install Playwright browsers
+      run: |
+        playwright install chromium
+        playwright install-deps chromium
+    
+    - name: Configure environment
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPO: ${{ github.repository }}
+        GITHUB_MC_LIST_FILE: mc_list.txt
+        GITHUB_BRANCH: ${{ github.ref_name }}
+        DATABASE_PATH: extractions.db
+        LOG_FILE: extraction_logs.txt
+        OUTPUT_DIR: output
+        REQUESTS_PER_MINUTE: '10'
+        MAX_RETRIES: '3'
+        REQUEST_TIMEOUT: '30'
+        LOG_LEVEL: INFO
+      run: |
+        echo "Environment configured"
+    
+    - name: Run FMCSA extraction
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_REPO: ${{ github.repository }}
+        GITHUB_MC_LIST_FILE: mc_list.txt
+        GITHUB_BRANCH: ${{ github.ref_name }}
+        DATABASE_PATH: extractions.db
+        LOG_FILE: extraction_logs.txt
+        OUTPUT_DIR: output
+        REQUESTS_PER_MINUTE: '10'
+        MAX_RETRIES: '3'
+        REQUEST_TIMEOUT: '30'
+      run: |
+        # Download extraction script if not in repo
+        if [ ! -f "github_runner.py" ]; then
+          echo "Creating github_runner.py..."
+          cat > github_runner.py << 'EOFRUNNER'
+        import asyncio
+        import os
+        import sys
+        from dotenv import load_dotenv
+        from github_integration import GitHubIntegration
+        from main import process_mc_numbers
+        
+        load_dotenv()
+        
+        async def main():
+            github = GitHubIntegration()
+            repo = os.getenv("GITHUB_REPO")
+            file_path = os.getenv("GITHUB_MC_LIST_FILE", "mc_list.txt")
+            branch = os.getenv("GITHUB_BRANCH", os.getenv("GITHUB_REF_NAME", "main"))
+            
+            if not repo:
+                repo = os.getenv("GITHUB_REPOSITORY")
+                if not repo:
+                    print("ERROR: GitHub repository not specified")
+                    sys.exit(1)
+            
+            print(f"Reading MC list from {repo}/{file_path}")
+            mc_numbers = await github.read_mc_list_from_repo(repo=repo, file_path=file_path, branch=branch)
+            
+            if not mc_numbers:
+                print("WARNING: No MC numbers found")
+                sys.exit(0)
+            
+            print(f"Found {len(mc_numbers)} MC numbers to process")
+            job_id = await process_mc_numbers(mc_numbers)
+            print(f"Extraction completed. Job ID: {job_id}")
+        
+        if __name__ == "__main__":
+            asyncio.run(main())
+        EOFRUNNER
+        fi
+        
+        # Download required Python files if not in repo
+        for file in github_integration.py main.py database.py fmcsa_scraper.py data_processor.py; do
+          if [ ! -f "$file" ]; then
+            echo "Downloading $file..."
+            # Files should be in repo, but if not, they'll need to be added
+          fi
+        done
+        
+        # Run extraction
+        python github_runner.py
+    
+    - name: Upload results as artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: extraction-results-${{ github.run_number }}
+        path: |
+          output/*.csv
+          output/*.json
+          extraction_logs.txt
+        retention-days: 30
+    
+    - name: Commit results back to repo
+      if: success()
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add output/*.csv output/*.json || true
+        git commit -m "Auto-update: FMCSA extraction results [skip ci]" || true
+        git push || echo "No changes to commit"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
