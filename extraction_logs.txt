@@ -1,0 +1,61 @@
+2025-11-02 17:14:39,673 - data_processor - INFO - Extracted 1 unique MC numbers from input
+2025-11-02 17:14:46,997 - database - INFO - Database initialized at extractions.db
+2025-11-02 17:14:46,998 - __main__ - INFO - Starting extraction job job_20251102_171446_6750 with 1 MC numbers
+2025-11-02 17:14:47,023 - database - INFO - Created job job_20251102_171446_6750 with 1 MC numbers
+2025-11-02 17:14:47,112 - httpx - INFO - HTTP Request: POST https://api.apify.com/v2/acts/fmcosa_scraper_actor_id/run-sync-get-dataset-items "HTTP/1.1 401 Unauthorized"
+2025-11-02 17:14:47,113 - fmcsa_scraper - WARNING - API extraction failed for MC 329233
+2025-11-02 17:14:47,116 - __main__ - WARNING - Retry 1/3 for MC 329233 after 2s
+2025-11-02 17:14:49,152 - httpx - INFO - HTTP Request: POST https://api.apify.com/v2/acts/fmcosa_scraper_actor_id/run-sync-get-dataset-items "HTTP/1.1 401 Unauthorized"
+2025-11-02 17:14:49,152 - fmcsa_scraper - WARNING - API extraction failed for MC 329233
+2025-11-02 17:14:49,152 - __main__ - WARNING - Retry 2/3 for MC 329233 after 4s
+2025-11-02 17:14:53,181 - httpx - INFO - HTTP Request: POST https://api.apify.com/v2/acts/fmcosa_scraper_actor_id/run-sync-get-dataset-items "HTTP/1.1 401 Unauthorized"
+2025-11-02 17:14:53,182 - fmcsa_scraper - WARNING - API extraction failed for MC 329233
+2025-11-02 17:14:53,183 - __main__ - WARNING - Retry 3/3 for MC 329233 after 6s
+2025-11-02 17:14:59,220 - httpx - INFO - HTTP Request: POST https://api.apify.com/v2/acts/fmcosa_scraper_actor_id/run-sync-get-dataset-items "HTTP/1.1 401 Unauthorized"
+2025-11-02 17:14:59,220 - fmcsa_scraper - WARNING - API extraction failed for MC 329233
+2025-11-02 17:14:59,253 - __main__ - ERROR - Failed to extract MC 329233: No data returned from scraper (after 3 retries)
+2025-11-02 17:14:59,306 - __main__ - INFO - Saved JSON output: output\extracted_carriers_20251102_171459.json
+2025-11-02 17:14:59,310 - __main__ - INFO - Saved failed extractions: output\failed_extractions_20251102_171459.csv
+2025-11-02 17:14:59,311 - __main__ - INFO - Job job_20251102_171446_6750 completed: 0 succeeded, 1 failed
+2025-11-02 17:15:45,817 - database - INFO - Database initialized at extractions.db
+2025-11-02 17:43:11,849 - database - INFO - Database initialized at extractions.db
+2025-11-02 17:44:48,564 - __main__ - INFO - Reading MC list from GitHub repo: potlucy73-hue/csa/mc_list.txt
+2025-11-02 17:44:48,691 - httpx - INFO - HTTP Request: GET https://api.github.com/repos/potlucy73-hue/csa/contents/mc_list.txt?ref=main "HTTP/1.1 200 OK"
+2025-11-02 17:44:48,692 - data_processor - INFO - Extracted 123 unique MC numbers from input
+2025-11-02 17:44:48,693 - github_integration - INFO - Read 123 MC numbers from GitHub repo potlucy73-hue/csa/mc_list.txt
+2025-11-02 17:44:48,693 - __main__ - INFO - Started GitHub extraction job job_20251102_174448_5c4b81ef with 123 MC numbers
+2025-11-02 17:44:48,695 - database - INFO - Database initialized at extractions.db
+2025-11-02 17:44:48,695 - main - INFO - Starting extraction job job_20251102_174448_5c4b81ef with 123 MC numbers
+2025-11-02 17:44:48,728 - database - INFO - Created job job_20251102_174448_5c4b81ef with 123 MC numbers
+2025-11-02 17:45:23,838 - fmcsa_scraper - ERROR - Timeout extracting MC 720604
+2025-11-02 17:45:23,847 - main - WARNING - Retry 1/3 for MC 720604 after 2s
+2025-11-02 17:45:56,774 - fmcsa_scraper - ERROR - Timeout extracting MC 720604
+2025-11-02 17:45:56,783 - main - WARNING - Retry 2/3 for MC 720604 after 4s
+2025-11-02 17:46:31,703 - fmcsa_scraper - ERROR - Timeout extracting MC 720604
+2025-11-02 17:46:31,712 - main - WARNING - Retry 3/3 for MC 720604 after 6s
+2025-11-02 17:47:08,655 - fmcsa_scraper - ERROR - Timeout extracting MC 720604
+2025-11-02 17:47:08,704 - main - ERROR - Failed to extract MC 720604: No data returned from scraper (after 3 retries)
+2025-11-02 17:47:45,674 - fmcsa_scraper - ERROR - Timeout extracting MC 720605
+2025-11-02 17:47:45,682 - main - WARNING - Retry 1/3 for MC 720605 after 2s
+2025-11-02 17:48:18,642 - fmcsa_scraper - ERROR - Timeout extracting MC 720605
+2025-11-02 17:48:18,650 - main - WARNING - Retry 2/3 for MC 720605 after 4s
+2025-11-02 17:48:53,585 - fmcsa_scraper - ERROR - Timeout extracting MC 720605
+2025-11-02 17:48:53,593 - main - WARNING - Retry 3/3 for MC 720605 after 6s
+2025-11-02 17:49:30,544 - fmcsa_scraper - ERROR - Timeout extracting MC 720605
+2025-11-02 17:49:30,577 - main - ERROR - Failed to extract MC 720605: No data returned from scraper (after 3 retries)
+2025-11-02 17:50:07,579 - fmcsa_scraper - ERROR - Timeout extracting MC 720606
+2025-11-02 17:50:07,588 - main - WARNING - Retry 1/3 for MC 720606 after 2s
+2025-11-02 17:50:40,558 - fmcsa_scraper - ERROR - Timeout extracting MC 720606
+2025-11-02 17:50:40,566 - main - WARNING - Retry 2/3 for MC 720606 after 4s
+2025-11-02 17:51:16,072 - fmcsa_scraper - ERROR - Timeout extracting MC 720606
+2025-11-02 17:51:16,081 - main - WARNING - Retry 3/3 for MC 720606 after 6s
+2025-11-02 17:51:53,046 - fmcsa_scraper - ERROR - Timeout extracting MC 720606
+2025-11-02 17:51:53,084 - main - ERROR - Failed to extract MC 720606: No data returned from scraper (after 3 retries)
+2025-11-02 17:52:30,073 - fmcsa_scraper - ERROR - Timeout extracting MC 720607
+2025-11-02 17:52:30,082 - main - WARNING - Retry 1/3 for MC 720607 after 2s
+2025-11-02 17:53:03,012 - fmcsa_scraper - ERROR - Timeout extracting MC 720607
+2025-11-02 17:53:03,027 - main - WARNING - Retry 2/3 for MC 720607 after 4s
+2025-11-02 17:53:38,015 - fmcsa_scraper - ERROR - Timeout extracting MC 720607
+2025-11-02 17:53:38,026 - main - WARNING - Retry 3/3 for MC 720607 after 6s
+2025-11-02 17:54:02,513 - fmcsa_scraper - ERROR - Error scraping MC 720607: Target page, context or browser has been closed
+2025-11-02 17:54:02,558 - main - ERROR - Failed to extract MC 720607: No data returned from scraper (after 3 retries)
